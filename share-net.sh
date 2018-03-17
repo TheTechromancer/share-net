@@ -3,7 +3,7 @@
 ### DEFAULTS ###
 
 # names of executables used in script
-required_progs=( 'dnsmasq' 'hostapd' 'iptables' 'ip' )
+required_progs=( 'ip' )
 
 # dhcp
 client_subnet='172.16.55.0'
@@ -61,6 +61,7 @@ check_progs() {
 	to_install=''
 
 	for bin in "${reqs[@]}"; do
+		printf "\n%s\n" "$bin"
 		hash $bin 2>/dev/null || to_install="$to_install $bin"
 	done
 
@@ -137,7 +138,7 @@ start_hostapd() {
 
 		cat <<EOF > $hostapd_cfg
 beacon_int=100
-ssid=share-net
+ssid=$ssid
 hw_mode=g
 wpa=2
 wpa_passphrase=$wpa_psk
@@ -174,14 +175,8 @@ bridge_on() {
 	ip link add name ics_bridge type bridge
 	ip link set up ics_bridge up
 
-	#ip link set down dev $int_ifc
-	#ip link set down dev $shared_ifc
-
 	ip link set $int_ifc master ics_bridge || cleanup
 	ip link set $shared_ifc master ics_bridge || cleanup
-
-	#ip link set up dev $int_ifc
-	#ip link set up dev $shared_ifc
 
 }
 
@@ -203,8 +198,17 @@ start_ics() {
 	get_ifcs
 	printf " |--- Internet: %s\n" "$int_ifc"
 	printf " |--- Shared:   %s\n" "$shared_ifc"
+
 	printf "[+] Checking binaries\n"
+	if [ "$is_ap" = true ]; then
+		required_progs+=('hostapd')
+	fi
+	if [ "$bridged_mode" != true ]; then
+		required_progs+=('dnsmasq')
+		required_progs+=('iptables')
+	fi
 	check_progs "${required_progs[@]}"
+
 	check_vars
 
 	ip link set dev $shared_ifc up
@@ -240,7 +244,7 @@ cleanup() {
 
 	if [ "$?" -ne 0 ]; then
 
-		printf "[+] Cleaning up\n"
+		printf "\n[+] Cleaning up\n"
 
 		if [ "$bridged_mode" = true ]; then
 			bridge_off
@@ -260,6 +264,8 @@ cleanup() {
 		ip link set dev $shared_ifc up
 
 	fi
+
+	exit
 
 }
 
