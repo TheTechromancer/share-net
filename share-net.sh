@@ -65,7 +65,7 @@ check_progs() {
 	done
 
 	if [ -n "$to_install" ]; then
-		printf "Programs required:\n$to_install\n"
+		printf "\nPrograms required:\n$to_install\n\n"
 		exit 0
 	fi
 
@@ -219,7 +219,7 @@ start_ics() {
 		printf "[+] Connection info:\n\n	SSID: %s\n	PSK:  %s\n\n" "$ssid" "$wpa_psk"
 	fi
 
-	printf "[+] Press CTRL+C to quit\n"
+	printf "[+] Press CTRL+C to quit\n\n"
 
 	if [ "$bridged_mode" = true ]; then
 		printf "[+] Bridging interfaces\n\n"
