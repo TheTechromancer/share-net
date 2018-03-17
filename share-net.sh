@@ -10,10 +10,11 @@ client_subnet='172.16.55.0'
 
 # wireless
 hostapd_cfg='/tmp/hostapd.conf'
-ssid='share_net'
+ssid='ShareNET'
 channel='11'
 # generate random 8-character PSK
 wpa_psk=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+
 
 # trap for cleanup
 trap cleanup SIGINT SIGTERM SIGHUP
