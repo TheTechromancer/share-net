@@ -1,6 +1,7 @@
 # ShareNET
 #### Internet connection sharing made simple with a straight-forward bash script
 
+<br>
 
 #### Features:
 <ul>
@@ -8,8 +9,6 @@
     <li>Supports NAT (great for circumventing hotel/airline Wi-Fi fees)</li>
     <li>No arguments are necessary in most cases - it just works!</li>
 </ul>
-
-<br>
 
 #### Known limitations:
 <ul>
