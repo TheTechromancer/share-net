@@ -1,8 +1,8 @@
 # ShareNET
-Internet connection sharing made simple with a straight-forward bash script
+#### Internet connection sharing made simple with a straight-forward bash script
 
 
-####Features:
+#### Features:
 <ul>
     <li>Share ethernet to wireless, vice versa, or any combination</li>
     <li>Supports NAT (great for circumventing hotel/airline Wi-Fi fees)</li>
@@ -11,7 +11,7 @@ Internet connection sharing made simple with a straight-forward bash script
 
 <br>
 
-####Known limitations:
+#### Known limitations:
 <ul>
     <li>Wi-Fi interface must support AP mode in order to be used as a hotspot</li>
     <li>Wi-Fi interfaces sometimes do not like to be bridged.  Use NAT (the default) instead</li>
