@@ -61,7 +61,6 @@ check_progs() {
 	to_install=''
 
 	for bin in "${reqs[@]}"; do
-		printf "\n%s\n" "$bin"
 		hash $bin 2>/dev/null || to_install="$to_install $bin"
 	done
 
