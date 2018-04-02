@@ -74,8 +74,8 @@ check_progs() {
 
 get_ifcs() {
 
-	[ "$check_int_ifc" = false ] || int_ifc=$(ip -o addr show | grep 'enp\|eth\|wlp\|wlan\|tun' | grep 'inet ' | tail -n 1 | awk '{print $2}' | cut -d':' -f1)
-	[ "$check_shared_ifc" = false ] || shared_ifc=$(ip -o link | grep 'enp\|eth\|wlp\|wlan' | grep -v $int_ifc | tail -n 1 | awk '{print $2}' | cut -d':' -f1)
+	[ "$check_int_ifc" = false ] || int_ifc=$(ip -o addr | grep 'inet ' | awk '{print $2}' | grep -v '^lo' | tail -n 1)
+	[ "$check_shared_ifc" = false ] || shared_ifc=$(ip -o link | awk '{print $2}' | cut -d: -f1 | grep -v '^lo' | grep -v "$int_ifc" | tail -n 1)
 	case "$shared_ifc" in
 		*wlp*|*wlan*)
 			is_ap=true
@@ -260,7 +260,11 @@ cleanup() {
 		if [ "$is_ap" = true ]; then
 			iwconfig $shared_ifc mode managed
 		fi
-		ip link set dev $shared_ifc up
+		if [ -n "$old_ip" ]; then
+			ip link set up dev $shared_ifc
+		else
+			ip link set down dev $shared_ifc
+		fi
 
 	fi
 
