@@ -22,7 +22,8 @@ trap cleanup SIGINT SIGTERM SIGHUP
 
 ### FUNCTIONS ###
 
-usage() {
+usage()
+{
 
 	cat <<EOF
 ${0##*/} version $version
@@ -45,7 +46,8 @@ EOF
 }
 
 
-check_root() {
+check_root()
+{
 
 	if [ $EUID -ne 0 ]; then
 		printf "[!] Please sudo me!\n"
@@ -55,7 +57,8 @@ check_root() {
 }
 
 
-check_progs() {
+check_progs()
+{
 
 	reqs=("$@")
 	to_install=''
@@ -72,7 +75,8 @@ check_progs() {
 }
 
 
-get_ifcs() {
+get_ifcs()
+{
 
 	[ "$check_int_ifc" = false ] || int_ifc=$(ip -o addr | grep 'inet ' | awk '{print $2}' | grep -v '^lo' | tail -n 1)
 	[ "$check_shared_ifc" = false ] || shared_ifc=$(ip -o link | awk '{print $2}' | cut -d: -f1 | grep -v '^lo' | grep -v "$int_ifc" | tail -n 1)
@@ -84,7 +88,8 @@ get_ifcs() {
 }
 
 
-check_vars() {
+check_vars()
+{
 
 	if [ -z $int_ifc ]; then
 		printf "[!] Please specify internet interface (-i)\n"
@@ -97,7 +102,8 @@ check_vars() {
 }
 
 
-set_ifc_ip() {
+set_ifc_ip()
+{
 
 	subnet_trunc=${client_subnet%.*}
 	gateway="$subnet_trunc.1"
@@ -114,7 +120,8 @@ set_ifc_ip() {
 }
 
 
-reset_ifc_ip() {
+reset_ifc_ip()
+{
 
 	ip addr del dev $shared_ifc "$gateway/24"
 	if [ -n "$old_ip" ]; then
@@ -124,7 +131,8 @@ reset_ifc_ip() {
 }
 
 
-start_dnsmasq() {
+start_dnsmasq()
+{
 
 	ifc="$1"
 
@@ -133,7 +141,8 @@ start_dnsmasq() {
 }
 
 
-start_hostapd() {
+start_hostapd()
+{
 
 		cat <<EOF > $hostapd_cfg
 beacon_int=100
@@ -149,7 +158,8 @@ EOF
 }
 
 
-iptables_on() {
+iptables_on()
+{
 
 	iptables -t nat -A POSTROUTING -o $int_ifc -j MASQUERADE
 	iptables -A FORWARD -i $int_ifc -o $shared_ifc -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
@@ -158,7 +168,8 @@ iptables_on() {
 }
 
 
-iptables_off() {
+iptables_off()
+{
 
 	iptables -t nat -D POSTROUTING -o $int_ifc -j MASQUERADE
 	iptables -D FORWARD -i $int_ifc -o $shared_ifc -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
@@ -167,7 +178,8 @@ iptables_off() {
 }
 
 
-bridge_on() {
+bridge_on()
+{
 
 	ip link delete ics_bridge type bridge 2>/dev/null
 
@@ -180,7 +192,8 @@ bridge_on() {
 }
 
 
-bridge_off() {
+bridge_off()
+{
 
 	ip link set $int_ifc nomaster
 	ip link set $shared_ifc nomaster
@@ -189,7 +202,8 @@ bridge_off() {
 }
 
 
-start_ics() {
+start_ics()
+{
 
 	printf "\n[+] Checking root\n"
 	check_root
@@ -239,7 +253,8 @@ start_ics() {
 }
 
 
-cleanup() {
+cleanup()
+{
 
 	if [ "$?" -ne 0 ]; then
 
